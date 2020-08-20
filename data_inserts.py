@@ -1,17 +1,18 @@
 from bs4 import BeautifulSoup
 import requests
 
-def insert_dicts(url, bill_dict, senator_dict, congress_dict):
+def insert_dicts(urls, bill_dict, senator_dict, congress_dict):
 
-    #request the page and get the html and information
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    document = soup.find('document_name').text
+    for url in urls:
+        #request the page and get the html and information
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        document = soup.find('document_name').text
 
-    #dictionary inserts
-    congress_insert(soup, document, congress_dict)
-    votes = senator_votes(soup, document, senator_dict)
-    bill_insert(soup, document, votes, bill_dict)
+        #dictionary inserts
+        congress_insert(soup, document, congress_dict)
+        votes = senator_votes(soup, document, senator_dict)
+        bill_insert(soup, document, votes, bill_dict)
     return
 
 
