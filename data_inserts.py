@@ -11,8 +11,11 @@ def insert_dicts(urls, bill_dict, senator_dict, congress_dict):
 
         #dictionary inserts
         congress_insert(soup, document, congress_dict)
+        print('congress_insert done')
         votes = senator_votes(soup, document, senator_dict)
+        print('senator_insert done')
         bill_insert(soup, document, votes, bill_dict)
+        print('bill_insert done')
     return
 
 
@@ -21,7 +24,7 @@ def congress_insert(soup, document, congress_dict):
     congress = soup.find('congress').text
 
     if congress in congress_dict:
-        congress_dict[congress].add(document)
+        congress_dict[congress].append(document)
     else:
         congress_dict[congress] = [document]
     return
@@ -82,8 +85,6 @@ def bill_insert(soup, document, votes, bill_dict):
     bill['Yea'] = votes['yea']
     bill['Nay'] = votes['nay']
     bill['Not Voting'] = votes['not voting']
-
-    print(bill)
 
     bill_dict[document] = bill
 

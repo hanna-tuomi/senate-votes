@@ -24,14 +24,21 @@ def get_vote_links():
     og_url = 'https://www.senate.gov/reference/Index/Votes.htm'
     # get each document from a specific congress and session
     congresses = get_roll_call_list_links(og_url, 'roll_call_lists/vote_menu')
+    print('got congresses')
 
     # get each vote record
     documents = []
     for link in congresses:
         documents.extend(get_roll_call_list_links(link, 'roll_call_lists/roll_call_vote_cfm'))
 
+    print('got votes')
+
     # get the xml
     votes = []
     for link in documents:
         votes.extend(get_roll_call_list_links(link, 'xml'))
+    
+    print('got xmls')
+    
     return votes
+
