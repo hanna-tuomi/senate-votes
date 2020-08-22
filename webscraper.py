@@ -46,9 +46,8 @@ def get_vote_links():
 #get all the vote urls
 votes = get_vote_links()
 
-#get the dicts in the votes
+# get the vote urls stored in a txt file
 vote_urls_txt = open("vote_urls.txt","w")
-vote_urls_txt.write(str(votes))
+for elem in votes:
+    vote_urls_txt.write(elem+'\n')
 vote_urls_txt.close()
-
-
