@@ -26,8 +26,6 @@ def get_vote_links():
     congresses = get_roll_call_list_links(og_url, 'roll_call_lists/vote_menu')
     print('got congresses')
 
-    congresses = congresses[:2]
-
     # get each vote record
     documents = []
     for link in congresses:
@@ -43,4 +41,14 @@ def get_vote_links():
     print('got xmls')
 
     return votes
+
+
+#get all the vote urls
+votes = get_vote_links()
+
+#get the dicts in the votes
+vote_urls_txt = open("vote_urls.txt","w")
+vote_urls_txt.write(str(votes))
+vote_urls_txt.close()
+
 

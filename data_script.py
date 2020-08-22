@@ -8,8 +8,13 @@ bill_dict = {}
 senator_dict = {}
 congress_dict = {}
 
-urls = get_vote_links()
-print('got vote urls')
+# get the vote urls
+# urls = get_vote_links()
+# print('got vote urls')
+
+urls = 
+
+# run the dictionary inserts
 insert_dicts(urls, bill_dict, senator_dict, congress_dict)
 
 # write the dictionaries into txt files
