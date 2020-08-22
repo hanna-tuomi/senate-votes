@@ -41,7 +41,7 @@ def senator_votes(soup, document, senator_dict):
     senator_info = ['member_full','first_name', 'last_name', 'party', 'state', 'vote_cast']
 
     # create voting dict
-    votes = {'yea': set(), 'nay': set(), 'not_voting': set(), 'guilty': set(), 'not_guilty': set(), 'present': set()}
+    votes = {'yea': set(), 'nay': set(), 'not_voting': set(), 'guilty': set(), 'not_guilty': set(), 'present': set(), 'present_giving_live_pair': set()}
 
     # build up senator entries
     for mem in members:
@@ -50,7 +50,7 @@ def senator_votes(soup, document, senator_dict):
         if senator_id not in senator_dict:
             senator = {'full_name': None, 'member_full': None,'first_name': None, 'last_name':  None, 
                        'party': None, 'state': None, 'Yea': set(), 'Nay': set(), 'Not Voting': set(), 'Guilty': set(),
-                       'Not Guilty': set(), 'Present': set()}
+                       'Not Guilty': set(), 'Present': set(), 'Present, Giving Live Pair': set()}
             full_name = mem.find('first_name').text + ' ' + mem.find('member_full').text
             senator['full_name'] = full_name
             for info in senator_info:
@@ -59,9 +59,15 @@ def senator_votes(soup, document, senator_dict):
             # add all of the data
             senator_dict[senator_id] = senator
 
-        #insert the vote information
+        #insert the vote information or output the unknown vote
         vote = mem.find('vote_cast').text
-        senator_dict[senator_id][vote].add(document)
+        try:
+            senator_dict[senator_id][vote].add(document)
+        except:
+            print("UNKNOWN VOTE",vote)
+            print(document)
+            continue
+
         # gather the votes
         if vote == 'Yea':
             votes['yea'].add(senator_id)
@@ -71,10 +77,12 @@ def senator_votes(soup, document, senator_dict):
             votes['not_voting'].add(senator_id)
         elif vote == 'Guilty':
             votes['guilty'].add(senator_id)
+        elif vote == 'Not Guilty':
+            votes['not_guilty'].add(senator_id)
         elif vote == 'Present':
             votes['present'].add(senator_id)
         else:
-            votes['not_guilty'].add(senator_id)
+            votes['present_giving_live_pair'].add(senator_id)
 
     return votes
 
@@ -82,10 +90,10 @@ def bill_insert(soup, document, url, votes, bill_dict):
     bill = {'url': None, 'congress': None, 'session': None, 'congress_year': None, 'vote_date': None, 'vote_number': None,
             'question': None, 'vote_title': None, 'vote_result_text': None, 'majority_requirement': None, 'yeas': None,
             'nays': None, 'absent': None, 'Yea': set(), 'Nay': set(), 'Not Voting': set(), 'Guilty': set(), 'Not Guilty': set(),
-            'Present': set()}
+            'Present': set(), 'Present, Giving Live Pair': set() }
 
     bill_info = ['congress', 'session', 'congress_year', 'vote_date', 'vote_number',
-            'question', 'vote_title', 'vote_result_text', 'majority_requirement', 'yeas', 'nays', 'absent']
+            'question', 'vote_title', 'vote_result_text', 'majority_requirement', 'yeas', 'nays', 'present', 'absent']
 
     # fill in the bill info
     bill['url'] = url
@@ -99,6 +107,7 @@ def bill_insert(soup, document, url, votes, bill_dict):
     bill['Guilty'] = votes['guilty']
     bill['Not Guilty'] = votes['not_guilty']
     bill['Present'] = votes['present']
+    bill['Present, Giving Live Pair'] = votes['present_giving_live_pair']
 
     bill_dict[document] = bill
 
